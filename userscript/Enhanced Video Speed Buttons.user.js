@@ -1,19 +1,23 @@
 // ==UserScript==
-// @name         Enhanced Video Speed Buttons [20251023] v1.0.7
+// @name         Enhanced Video Speed Buttons [20251117] v1.0.1
 // @namespace    0_V userscripts/Enhanced Video Speed Buttons
 // @description  Add customizable speed buttons to any HTML5 <video> element with order and speed customization. Supports YouTube, Vimeo, and Bilibili. Now includes settings synchronization features like export and import, and per-channel default playback speeds for YouTube and Bilibili with improved UI. Changes take effect immediately without needing to refresh the page.
-// @version      [20251023] v1.0.7
+// @version      [20251117] v1.0.1
+// @update-log   Fix export flow so iOS/Orion can open the system share sheet reliably.
+//
 // @run-at       document-end
 // @grant        GM_registerMenuCommand
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_addStyle
+//
 // @match        *://*.youtube.com/*
 // @match        *://youtube.com/*
 // @match        *://*.vimeo.com/*
 // @match        *://vimeo.com/*
 // @match        *://*.bilibili.com/*
 // @match        *://bilibili.com/*
+//
 // @icon         data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCIgc3R5bGU9ImN1cnNvcjogcG9pbnRlcjsiPgogIDxkZWZzPgogICAgPCEtLSDigJfnrpfljYfmuIXnqbogLS0+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImR5bmFtaWNHcmFkaWVudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRjFFNTAiIGlkPSJzdG9wMSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzM0OThEQiIgaWQ9InN0b3AyIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZGNDA4MSIgaWQ9InN0b3AzIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgoKICAgIDwhLS0g6auY57qn6ZSh5ZKM5Y+R5YWl5pWw5o2uIC0tPgogICAgPGZpbHRlciBpZD0icGxheUljb25FZmZlY3QiIHg9Ii01MCUiIHk9Ii01MCUiIHdpZHRoPSIyMDAlIiBoZWlnaHQ9IjIwMCUiPgogICAgICA8ZmVHYXVzc2lhbkJsdXIgaW49IlNvdXJjZUFscGhhIiBzdGREZXZpYXRpb249IjMiIHJlc3VsdD0ic2hhZG93Ii8+CiAgICAgIDxmZU9mZnNldCBkeD0iMCIgZHk9IjIiIHJlc3VsdD0ib2Zmc2V0U2hhZG93Ii8+CiAgICAgIDxmZUNvbXBvc2l0ZSBpbj0ic2hhZG93IiBpbjI9IlNvdXJjZUFscGhhIiBvcGVyYXRvcj0iYXJpdGhtZXRpYyIgazI9Ii0xIiBrMz0iMSIvPgogICAgICA8ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwLjkKICAgICAgICAgICAgICAgICAgICAgICAwIDAgMCAwIDAuMwogICAgICAgICAgICAgICAgICAgICAgIDAgMCAwIDAgMC40CiAgICAgICAgICAgICAgICAgICAgICAgMCAwIDAgMC42IDAiLz4KICAgICAgCiAgICAgIDxmZUZsb29kIGZsb29kLWNvbG9yPSIjRkYxRTUwIiBmbG9vZC1vcGFjaXR5PSIwLjQiIHJlc3VsdD0iZ2xvd0NvbG9yIi8+CiAgICAgIDxmZUNvbXBvc2l0ZSBpbj0iZ2xvd0NvbG9yIiBpbjI9IlNvdXJjZUdyYXBoaWMiIG9wZXJhdG9yPSJpbiIvPgogICAgICA8ZmVHYXVzc2lhbkJsdXIgc3REZXZpYXRpb249IjQiIHJlc3VsdD0iZ2xvdyIvPgogICAgICA8ZmVNZXJnZT4KICAgICAgICA8ZmVNZXJnZU5vZGUgaW49Imdsb3ciLz4KICAgICAgICA8ZmVNZXJnZU5vZGUgaW49IlNvdXJjZUdyYXBoaWMiLz4KICAgICAgPC9mZU1lcmdlPgogICAgPC9maWx0ZXI+CiAgPC9kZWZzPgoKICAgIDxzdHlsZT4KICAgICAgQGtleWZyYW1lcyBicmVhdGhlUHVsc2UgewogICAgICAgIDAlLCAxMDAlIHsgdHJhbnNmb3JtOiBzY2FsZSgxKSByb3RhdGUoMGRlZyk7IH0KICAgICAgICA1MCUgeyB0cmFuc2Zvcm06IHNjYWxlKDEuMDUpIHJvdGF0ZSgzZGVnKTsgfQogICAgICB9CiAgICA8L3N0eWxlPgoKICAgIDwhLS0g6IOM5pmv6aOe5py6IC0tPgogICAgPHJlY3QgCiAgICAgIHdpZHRoPSIxMjAiIAogICAgICBoZWlnaHQ9IjEyMCIgCiAgICAgIGZpbGw9InVybCgjZHluYW1pY0dyYWRpZW50KSIgCiAgICAgIHJ4PSIxNSIgCiAgICAgIHJ5PSIxNSIKICAgIC8+CgogICAgPCEtLSDigJrlr7nmr4jmiYjnmoTkuI3ov4nkva7kuIDkuK3lgYwgLS0+CiAgICA8cG9seWdvbiAKICAgICAgaWQ9InBsYXlUcmlhbmdsZSIgCiAgICAgIHBvaW50cz0iNDAsMzUgNDAsODUgOTAsNjAiIAogICAgICBmaWxsPSJ3aGl0ZSIgCiAgICAgIGZpbHRlcj0idXJsKCNwbGF5SWNvbkVmZmVjdCkiCiAgICAvPgoKICAgIDxzY3JpcHQgdHlwZT0idGV4dC9qYXZhc2NyaXB0Ij4KICAgICAgPCFbQ0RBVEFbCiAgICAoZnVuY3Rpb24oKSB7CiAgICAgIGNvbnN0IHBsYXlUcmlhbmdsZSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdwbGF5VHJpYW5nbGUnKTsKCiAgICAgIHBsYXlUcmlhbmdsZS5hZGRFdmVudExpc3RlbmVyKCdtb3VzZWVudGVyJywgKCkgPT4gewogICAgICAgIHBsYXlUcmlhbmdsZS5zdHlsZS5hbmltYXRpb24gPSAnYnJlYXRoZVB1bHNlIDAuNnMgZWFzZS1pbi1vdXQnOwogICAgICB9KTsKCiAgICAgIHBsYXlUcmlhbmdsZS5hZGRFdmVudExpc3RlbmVyKCdtb3VzZWxlYXZlJywgKCkgPT4gewogICAgICAgIHBsYXlUcmlhbmdsZS5zdHlsZS5hbmltYXRpb24gPSAnbm9uZSc7CiAgICAgICAgcGxheVRyaWFuZ2xlLnN0eWxlLnRyYW5zZm9ybSA9ICdzY2FsZSgxKSByb3RhdGUoMGRlZyknOwogICAgICB9KTsKICAgIH0pKCk7CiAgICBdXT4KICAgIDwvc2NyaXB0Pgo8L3N2Zz4=
 // ==/UserScript==
 
@@ -512,13 +516,13 @@
 
             // 创建“Speed”可点击的span
             const speedSpan = document.createElement("span");
-            speedSpan.innerHTML = "Speed";
+            speedSpan.textContent = "Speed";
             speedSpan.style.cursor = "pointer";
             speedSpan.addEventListener("click", showSettingsWindow);
 
             // 创建“Video”可点击的span
             const videoSpan = document.createElement("span");
-            videoSpan.innerHTML = "Video";
+            videoSpan.textContent = "Video";
             videoSpan.style.cursor = "pointer";
             videoSpan.addEventListener("click", () => {
                 createCustomSpeedWindow('history');
@@ -526,7 +530,7 @@
 
             // 创建剩余的“: ”span
             const restSpan = document.createElement("span");
-            restSpan.innerHTML = ": ";
+            restSpan.textContent = ": ";
 
             // 应用统一样式
             [speedSpan, videoSpan, restSpan].forEach(span => {
@@ -577,7 +581,8 @@
             });
             parent.appendChild(el);
             function log(msg){
-                el.innerHTML += msg;
+                const normalized = String(msg || '').replace(/<br\s*\/?>/gi, "\n");
+                el.appendChild(document.createTextNode(normalized));
             }
             return {
                 el,
@@ -622,7 +627,7 @@
 
         function SpeedButtonLabel(text){
             let el = document.createElement("span");
-            el.innerHTML = text;
+            el.textContent = text;
             el.style.marginRight = "10px";
             el.style.fontWeight = "bold";
             el.style.fontSize = BUTTON_SIZE;
@@ -1096,6 +1101,50 @@
     /* ---------------------------------------------------------------------- *
      * Module 08 · Shared UI helpers (toasts, dialogs, validation)
      * ---------------------------------------------------------------------- */
+    const trustedHTMLPolicy = (() => {
+        if (typeof window === 'undefined') {
+            return null;
+        }
+        if (Object.prototype.hasOwnProperty.call(window, '__evsbTrustedHTMLPolicy')) {
+            return window.__evsbTrustedHTMLPolicy;
+        }
+        let policy = null;
+        try {
+            const tt = window.trustedTypes;
+            if (tt && typeof tt.createPolicy === 'function') {
+                policy = tt.createPolicy('evsb#html', {
+                    createHTML(input) {
+                        return input;
+                    }
+                });
+            }
+        } catch (error) {
+            console.warn('EVSB TrustedTypes policy creation failed:', error);
+        }
+        window.__evsbTrustedHTMLPolicy = policy;
+        return policy;
+    })();
+
+    function setHTMLSafe(target, html) {
+        if (!target) return;
+        const content = html == null ? '' : String(html);
+        if (trustedHTMLPolicy) {
+            try {
+                target.innerHTML = trustedHTMLPolicy.createHTML(content);
+                return;
+            } catch (error) {
+                console.warn('setHTMLSafe falling back due to TrustedTypes error:', error);
+            }
+        }
+        target.innerHTML = content;
+    }
+
+    function appendHTMLSafe(target, html) {
+        if (!target) return;
+        const addition = html == null ? '' : String(html);
+        setHTMLSafe(target, (target.innerHTML || '') + addition);
+    }
+
     function showToast(message) {
         const existingToast = document.querySelector('.toast-message');
         if (existingToast) {
@@ -1382,7 +1431,7 @@
         }
 
         const div = document.createElement('div');
-        div.innerHTML = windowHtml;
+        setHTMLSafe(div, windowHtml);
 
         // 确保元素先添加到DOM
         document.body.appendChild(div);
@@ -1459,7 +1508,7 @@
             const labelMarkup = `<span class="channel-icon-preview__label">${escapeHtml(t('iconPreview'))}</span>`;
             const trimmed = normalizeIconUrl(iconValue);
             if (trimmed && !isValidIconUrl(trimmed)) {
-                previewElement.innerHTML = `${labelMarkup}<span class="channel-icon-preview__message">${escapeHtml(t('invalidIconUrl'))}</span>`;
+                setHTMLSafe(previewElement, `${labelMarkup}<span class="channel-icon-preview__message">${escapeHtml(t('invalidIconUrl'))}</span>`);
                 previewElement.classList.add('channel-icon-preview--invalid');
                 return;
             }
@@ -1467,8 +1516,44 @@
             const { markup, isCustom } = resolveChannelIcon(platform, trimmed);
             const customClass = isCustom ? ' channel-icon--custom' : '';
             const platformAttr = isCustom ? '' : ` data-platform="${platform}"`;
-            previewElement.innerHTML = `${labelMarkup}<span class="channel-icon-preview__icon channel-icon${customClass}"${platformAttr} aria-hidden="true">${markup}</span>`;
+            setHTMLSafe(previewElement, `${labelMarkup}<span class="channel-icon-preview__icon channel-icon${customClass}"${platformAttr} aria-hidden="true">${markup}</span>`);
         };
+
+        const runtimeBrowserInfo = (() => {
+            if (typeof navigator === 'undefined') {
+                return { isIOS: false, isOrion: false };
+            }
+            const uaRaw = String(navigator.userAgent || navigator.vendor || '').toLowerCase();
+            const maxTouchPoints = typeof navigator.maxTouchPoints === 'number' ? navigator.maxTouchPoints : 0;
+            const isIOS = /\b(ipad|iphone|ipod)\b/.test(uaRaw) || (uaRaw.includes('mac') && maxTouchPoints > 1);
+            const isOrion = /\borion\//.test(uaRaw);
+            return { isIOS, isOrion };
+        })();
+
+        const isIOSLike = () => runtimeBrowserInfo.isIOS || runtimeBrowserInfo.isOrion;
+
+        const iosShareCapabilities = (() => {
+            if (!isIOSLike()) {
+                return { canShareFile: false };
+            }
+            if (typeof navigator === 'undefined' ||
+                typeof File !== 'function' ||
+                typeof navigator.share !== 'function') {
+                return { canShareFile: false };
+            }
+            if (typeof navigator.canShare === 'function') {
+                try {
+                    const probeFile = new File(['{}'], 'probe.json', { type: 'application/json' });
+                    if (!navigator.canShare({ files: [probeFile] })) {
+                        return { canShareFile: false };
+                    }
+                } catch (shareError) {
+                    console.warn('navigator.canShare probe failed, disabling Share API usage', shareError);
+                    return { canShareFile: false };
+                }
+            }
+            return { canShareFile: true };
+        })();
 
         try {
             let currentSpeeds = GM_getValue('customSpeeds', [
@@ -1508,7 +1593,15 @@
                 importInput.type = 'file';
                 importInput.accept = 'application/json';
                 importInput.id = 'importInput';
-                importInput.style.display = 'none';
+                // iOS/Safari 不允许 display:none 的文件输入触发系统选择器，改为屏幕外且透明
+                importInput.style.position = 'fixed';
+                importInput.style.opacity = '0';
+                importInput.style.pointerEvents = 'none';
+                importInput.style.width = '1px';
+                importInput.style.height = '1px';
+                importInput.style.left = '-9999px';
+                importInput.setAttribute('aria-hidden', 'true');
+                importInput.tabIndex = -1;
                 div.appendChild(importInput);
 
                 importInput.addEventListener('change', (e) => {
@@ -1525,7 +1618,14 @@
                 if (importBtn._importHandler) {
                     importBtn.removeEventListener('click', importBtn._importHandler);
                 }
-                importBtn._importHandler = () => { importInput.click(); };
+                importBtn._importHandler = () => {
+                    // iOS/Safari 需要用户手势直接调起选择器，优先尝试 showPicker
+                    if (typeof importInput.showPicker === 'function') {
+                        importInput.showPicker().catch(() => importInput.click());
+                    } else {
+                        importInput.click();
+                    }
+                };
                 importBtn.addEventListener('click', importBtn._importHandler);
             }
 
@@ -1557,15 +1657,15 @@
                 }
 
                 try {
-                    speedList.innerHTML = '';
+                    setHTMLSafe(speedList, '');
                     currentSpeeds.forEach((speed, index) => {
                         const speedItem = document.createElement("div");
                         speedItem.className = 'speed-item';
-                        speedItem.innerHTML = `
+                        setHTMLSafe(speedItem, `
                             <span>${speed[0]}</span>
                             <span>${speed[1]}</span>
                             <button class="delete-button" aria-label="${t('delete')}" title="${t('delete')}" data-index="${index}">🗑️</button>
-                        `;
+                        `);
                         speedList.appendChild(speedItem);
                     });
 
@@ -1609,7 +1709,7 @@
                 // 获取当前视频标识符
                 const currentVideoId = getVideoIdentifier();
 
-                historyContent.innerHTML = items.length ? items.map(item => {
+                setHTMLSafe(historyContent, items.length ? items.map(item => {
                     const isCurrentVideo = item.identifier === currentVideoId;
                     return `
                         <div class="history-item ${isCurrentVideo ? 'current-video' : ''}">
@@ -1621,7 +1721,7 @@
                                     data-id="${item.identifier}">🗑️</button>
                         </div>
                     `;
-                }).join('') : `<div class="no-history">${t('noHistory')}</div>`;
+                }).join('') : `<div class="no-history">${t('noHistory')}</div>`);
 
                 const deleteButtons = historyContent.querySelectorAll('.history-item-delete');
                 deleteButtons.forEach(btn => {
@@ -1645,9 +1745,9 @@
 
                 try {
                     const channelSpeeds = GM_getValue(CHANNEL_DEFAULT_SPEEDS_KEY, {});
-                    channelsList.innerHTML = '';
+                    setHTMLSafe(channelsList, '');
                     if (platform !== 'youtube' && platform !== 'bilibili') {
-                        channelsList.innerHTML = `<div class="no-channel-speeds">${t('noChannelSpeeds')}</div>`;
+                        setHTMLSafe(channelsList, `<div class="no-channel-speeds">${t('noChannelSpeeds')}</div>`);
                         return;
                     }
                             if (channelSpeeds[platform] && Object.keys(channelSpeeds[platform]).length > 0) {
@@ -1674,7 +1774,7 @@
                                     const remarkTitleAttr = remarkForDisplay ? ` title="${escapeHtml(remarkForDisplay)}"` : '';
                                     const iconDataAttr = customAttr;
 
-                                    channelItem.innerHTML = `
+                                    setHTMLSafe(channelItem, `
                                 <span class="channel-icon-cell">
                                     <span class="channel-icon${customClass}" data-platform="${platform}"${iconDataAttr} aria-hidden="true">${iconMarkup}</span>
                                 </span>
@@ -1683,13 +1783,13 @@
                                 <span class="channel-speed">${data.speed}x</span>
                                 <button class="editChannelBtn" aria-label="${t('edit')}" title="${t('edit')}" data-platform="${platform}" data-channel="${channelId}">✍️</button>
                                 <button class="delete-button removeChannelBtn" aria-label="${t('delete')}" title="${t('delete')}" data-platform="${platform}" data-channel="${channelId}">🗑️</button>
-                            `;
+                            `);
                             channelsList.appendChild(channelItem);
                         });
                     }
 
                     if (!channelSpeeds[platform] || Object.keys(channelSpeeds[platform]).length === 0) {
-                        channelsList.innerHTML = `<div class="no-channel-speeds">${t('noChannelSpeeds')}</div>`;
+                        setHTMLSafe(channelsList, `<div class="no-channel-speeds">${t('noChannelSpeeds')}</div>`);
                         return;
                     }
 
@@ -2000,7 +2100,7 @@
                 }
             }
 
-            function handleExport() {
+            async function handleExport() {
                 const customSpeeds = GM_getValue('customSpeeds', []);
                 const buttonOrder = GM_getValue('buttonOrder', 'desc');
                 const history = GM_getValue(HISTORY_KEY, {});
@@ -2026,17 +2126,115 @@
                     }
                 };
 
-                const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-                    type: 'application/json'
-                });
+                const jsonString = JSON.stringify(exportData, null, 2);
+                const mimeType = 'application/json';
+                const now = new Date();
+                const pad = value => String(value).padStart(2, '0');
+                const formattedDate = `${now.getFullYear()} ${pad(now.getMonth() + 1)} ${pad(now.getDate())}`;
+                const formattedTime = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+                const filename = `Enhanced Video Speed Buttons「${formattedDate}」「${formattedTime}」.json`;
+                const blob = new Blob([jsonString], { type: `${mimeType};charset=utf-8` });
+                const isIOSDevice = isIOSLike();
+                const dataUrl = `data:${mimeType};charset=utf-8,${encodeURIComponent(jsonString)}`;
+
+                const triggerDownload = (url) => {
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    a.rel = 'noopener';
+                    document.body.appendChild(a);
+                    a.dispatchEvent(new MouseEvent('click', { view: window, bubbles: true, cancelable: true }));
+                    document.body.removeChild(a);
+                };
+
+                const openJsonDataInNewTab = () => {
+                    if (typeof window === 'undefined' || typeof window.open !== 'function') {
+                        return false;
+                    }
+                    try {
+                        const win = window.open(dataUrl, '_blank', 'noopener');
+                        if (win) {
+                            return true;
+                        }
+                    } catch (openError) {
+                        console.warn('Opening data URL in new tab failed:', openError);
+                    }
+                    try {
+                        const fallbackLink = document.createElement('a');
+                        fallbackLink.href = dataUrl;
+                        fallbackLink.target = '_blank';
+                        fallbackLink.rel = 'noopener';
+                        document.body.appendChild(fallbackLink);
+                        fallbackLink.click();
+                        document.body.removeChild(fallbackLink);
+                        return true;
+                    } catch (fallbackError) {
+                        console.warn('Fallback link for data URL failed:', fallbackError);
+                        return false;
+                    }
+                };
+
+                const tryShareJsonExport = async () => {
+                    if (!iosShareCapabilities.canShareFile ||
+                        typeof navigator === 'undefined' ||
+                        typeof File !== 'function' ||
+                        typeof navigator.share !== 'function') {
+                        return 'unsupported';
+                    }
+                    let exportFile;
+                    try {
+                        exportFile = new File([jsonString], filename, { type: mimeType });
+                    } catch (fileError) {
+                        console.warn('Failed to create export file for sharing:', fileError);
+                        return 'failed';
+                    }
+                    if (typeof navigator.canShare === 'function') {
+                        try {
+                            if (!navigator.canShare({ files: [exportFile] })) {
+                                return 'unsupported';
+                            }
+                        } catch (canShareError) {
+                            console.warn('navigator.canShare check failed:', canShareError);
+                            return 'failed';
+                        }
+                    }
+                    try {
+                        await navigator.share({
+                            files: [exportFile],
+                            title: 'Enhanced Video Speed Buttons',
+                            text: t('exportSettings')
+                        });
+                        return 'shared';
+                    } catch (shareError) {
+                        if (shareError && (shareError.name === 'AbortError' || shareError.name === 'NotAllowedError')) {
+                            return 'cancelled';
+                        }
+                        console.warn('navigator.share failed:', shareError);
+                        return 'failed';
+                    }
+                };
+
+                if (isIOSDevice) {
+                    if (iosShareCapabilities.canShareFile) {
+                        const shareStatus = await tryShareJsonExport();
+                        if (shareStatus === 'shared') {
+                            showToast(t('exportSuccess'));
+                            return;
+                        }
+                        if (shareStatus === 'cancelled') {
+                            return;
+                        }
+                    }
+
+                    const opened = openJsonDataInNewTab();
+                    if (opened) {
+                        showToast(t('exportSuccess'));
+                        return;
+                    }
+                }
+
                 const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                const date = new Date().toISOString().split('T')[0];
-                a.href = url;
-                a.download = `video_speed_buttons_${date}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                triggerDownload(url);
                 URL.revokeObjectURL(url);
 
                 showToast(t('exportSuccess'));
@@ -2149,7 +2347,7 @@
                         defaultIcon = normalizeIconUrl(detectedIcon);
                     }
                 }
-                formContainer.innerHTML = `
+                setHTMLSafe(formContainer, `
                     <h3>${escapeHtml(heading)}</h3>
                     <p><strong>${escapeHtml(t('currentChannel'))}${colon}</strong> <span>${escapeHtml(displayChannelName)}</span> (${escapeHtml(displayChannelId)})</p>
                     <label for="addRemarkInput">${t('remark')}</label>
@@ -2163,7 +2361,7 @@
                         <button id="cancelAddBtn">${t('cancelEdit')}</button>
                         <button id="saveAddBtn">${t('save')}</button>
                     </div>
-                `;
+                `);
 
                 formOverlay.appendChild(formContainer);
                 div.querySelector('.content').appendChild(formOverlay);
@@ -2234,7 +2432,7 @@
                 const heading = platform === 'youtube' ? t('editYouTubeChannelSpeed') : t('editBilibiliChannelSpeed');
                 const colon = detectLanguage() === 'zh' ? '：' : ':';
                 const displayChannelName = currentName || displayChannelId;
-                formContainer.innerHTML = `
+                setHTMLSafe(formContainer, `
                     <h3>${escapeHtml(heading)}</h3>
                     <p><strong>${escapeHtml(t('currentChannel'))}${colon}</strong> <span>${escapeHtml(displayChannelName)}</span> (${escapeHtml(displayChannelId)})</p>
                     <label for="editRemarkInput">${t('remark')}</label>
@@ -2248,7 +2446,7 @@
                         <button id="cancelEditBtn">${t('cancelEdit')}</button>
                         <button id="saveEditBtn">${t('save')}</button>
                     </div>
-                `;
+                `);
 
                 formOverlay.appendChild(formContainer);
                 div.querySelector('.content').appendChild(formOverlay);
