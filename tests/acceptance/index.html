@@ -1,0 +1,25 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>YouTube</title></head>
+<body>
+<ytd-app>
+  <div id="masthead"><input id="search" placeholder="Search"><div id="shadow-host"></div></div>
+  <div id="preview-slot"></div>
+  <ytd-browse id="home" hidden><h2>Home feed</h2><div class="thumb" id="thumb1">thumbnail</div></ytd-browse>
+  <ytd-watch-flexy id="flexy" hidden>
+    <div id="player"><div id="movie_player"><div class="html5-video-container"><video class="html5-main-video" id="main-video"></video></div></div></div>
+    <ytd-watch-metadata>
+      <div id="above-the-fold">
+        <div id="title"><h1 id="vtitle"></h1></div>
+        <div id="owner">
+          <ytd-video-owner-renderer>
+            <a class="yt-simple-endpoint" id="owner-link" href=""><div id="avatar"><img id="img" src=""></div></a>
+            <ytd-channel-name><div id="text"><a id="owner-name" href=""></a></div></ytd-channel-name>
+          </ytd-video-owner-renderer>
+        </div>
+      </div>
+    </ytd-watch-metadata>
+    <div id="comments"><div id="contenteditable-root" contenteditable="true"></div><textarea id="other-textarea"></textarea></div>
+  </ytd-watch-flexy>
+</ytd-app>
+<script src="/app.js"></script>
+</body></html>
