@@ -91,7 +91,8 @@ const startRecorder = (page) => page.evaluate((sel) => {
   v.addEventListener('loadstart', () => R.reloads++);
   R.iv = setInterval(() => { const t = v.currentTime; if (t < R.last - 1) R.jumps.push([R.last, t]); R.last = t; }, 250);
 }, MAIN);
-const recorder = (page) => page.evaluate(() => ({ jumps: window.__rec.jumps, reloads: window.__rec.reloads }));
+const recorder = (page) => page.evaluate(() => ({ jumps: window.__rec.jumps, reloads: window.__rec.reloads,
+  ytError: [...document.querySelectorAll('#movie_player .ytp-error')].map((e) => e.innerText.trim()).filter(Boolean).join(' / ') }));
 
 const tests = [];
 const test = (name, fn) => tests.push({ name, fn });
@@ -126,8 +127,10 @@ test('R3 playback position never moves backwards / no reload during script opera
   for (const k of ['-', '=', '+', '*', 'Shift+Slash']) { await pressKey(p, k); await sleep(700); }
   await p.evaluate(() => window.__gmMenu[0].fn()); await sleep(1000);
   await p.keyboard.press('Escape'); await p.evaluate(() => { const w = document.querySelector('#customSpeedWindow'); const x = w && [...w.querySelectorAll('button')].find((b) => b.textContent.trim() === '×'); if (x) x.click(); }); await sleep(800);
-  await sleep(30000);
+  // Signed-out automated sessions get cut off by YouTube ~1 min after load ("Something went wrong"), so keep this short.
+  await sleep(15000);
   const r = await recorder(p); const s = await stats(p);
+  expect(!r.ytError, 'YouTube player error (environment, not the script): ' + r.ytError + ' jumps ' + JSON.stringify(r.jumps));
   expect(r.jumps.length === 0, 'backward jumps: ' + JSON.stringify(r.jumps));
   expect(r.reloads === 0, 'video reloaded x' + r.reloads);
   expect(s.timeWrites === 0 && s.mediaCalls === 0, `script touched currentTime/load/play ${s.timeWrites}/${s.mediaCalls}`);
