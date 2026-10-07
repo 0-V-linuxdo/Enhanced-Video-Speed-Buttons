@@ -12,3 +12,13 @@ node tests/acceptance/run.js "userscript/Enhanced Video Speed Buttons.user.js"
 
 `run.js` 通过 Chromium 的 `--host-resolver-rules` 把 `www.youtube.test` 指向本地服务，
 让脚本把它识别为 YouTube。需要 `playwright`（或设置 `PLAYWRIGHT_MODULE` 指向它）。
+
+## 真实 YouTube
+
+`real-youtube.js` 在真实的 www.youtube.com 上跑 R1–R10（对应 §13 中能在真实页面上验证的部分），可用任何 Chromium 内核浏览器：
+
+```sh
+npm i playwright   # 只需要库，不必下载浏览器
+BROWSER_PATH=/Applications/Helium.app/Contents/MacOS/Helium \
+  node tests/acceptance/real-youtube.js "userscript/Enhanced Video Speed Buttons.user.js"
+```

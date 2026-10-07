@@ -536,6 +536,7 @@
     expected: [],         // rates the script set and whose ratechange has not arrived yet
     noAnchorSince: 0,
     floatTimer: 0,
+    freshLoad: true,      // between a new media source and its first playback
   };
 
   // ---------------------------------------------------------------------------
@@ -607,7 +608,12 @@
     dispatchSpeed(r, false);
   }
 
+  // canplay/loadeddata/playing also follow seeks and resumes; only treat them as "media just loaded"
+  // until the first playback after a new source, so they don't swallow the user's own menu changes.
   function onMediaEvent(e) {
+    if (e.type === 'loadstart' || e.type === 'emptied') state.freshLoad = true;
+    else if (!state.freshLoad && (e.type === 'canplay' || e.type === 'loadeddata' || e.type === 'playing')) return;
+    if (e.type === 'playing') state.freshLoad = false;
     openGuard();
     if (state.video && Math.abs(state.video.playbackRate - state.target) >= EPS) setRate(state.target);
     if (e.type === 'loadstart' || e.type === 'emptied') scheduleTick(50);

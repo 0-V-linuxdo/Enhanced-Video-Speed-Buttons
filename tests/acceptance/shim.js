@@ -65,7 +65,8 @@
     const pol = window.trustedTypes.createPolicy('harness-loader', { createScript: (s) => s });
     try { (0, eval)(pol.createScript(window.__US_SRC)); } catch (e) { S.errors.push('load: ' + e); }
   };
-  // @run-at document-end
+  // @run-at document-end (real-youtube.js injects the script itself instead)
+  if (!window.__US_SRC) return;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once: true });
   else run();
 })();
